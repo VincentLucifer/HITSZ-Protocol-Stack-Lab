@@ -11,6 +11,19 @@
  */
 void ethernet_in(buf_t *buf) {
     // TO-DO
+    // Step1: 数据长度检查
+    if(buf->len < sizeof(ether_hdr_t)) {
+        return;
+    }
+
+    // Step2: 移除以太网包头
+    ether_hdr_t *hdr = (ether_hdr_t *) buf->data;
+    net_protocol_t protocol = swap16(hdr->protocol16);
+    uint8_t *src = hdr->src;
+    buf_remove_header(buf, sizeof(ether_hdr_t));
+
+    // Step3: 向上层传递数据包
+    net_in(buf, protocol, src);
 }
 /**
  * @brief 处理一个要发送的数据包
@@ -21,6 +34,27 @@ void ethernet_in(buf_t *buf) {
  */
 void ethernet_out(buf_t *buf, const uint8_t *mac, net_protocol_t protocol) {
     // TO-DO
+    // Step1: 数据长度检查和填充
+    if (buf->len < 46) {
+        size_t len_padding = 46 - buf->len;
+        buf_add_padding(buf, len_padding);
+    }
+
+    // Step2: 添加以太网包头
+    buf_add_header(buf, sizeof(ether_hdr_t));
+    ether_hdr_t *hdr = (ether_hdr_t *) buf->data;
+
+    // Step3: 填写目的MAC地址
+    memcpy(hdr->dst, mac, NET_MAC_LEN);
+
+    // Step4: 填写源MAC地址，即本机的MAC地址
+    memcpy(hdr->src, net_if_mac, NET_MAC_LEN);
+
+    // Step5: 填写协议类型protocol
+    hdr->protocol16 = swap16(protocol);
+
+    // Step6: 发送数据帧
+    driver_send(buf);
 }
 /**
  * @brief 初始化以太网协议

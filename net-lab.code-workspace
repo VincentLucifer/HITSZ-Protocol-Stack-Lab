@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cmake.generator": "MinGW Makefiles",
+		"files.associations": {
+			"random": "c",
+			"net.h": "c"
+		}
+	}
+}
