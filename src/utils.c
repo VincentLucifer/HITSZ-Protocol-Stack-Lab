@@ -153,15 +153,32 @@ uint16_t transport_checksum(uint8_t protocol, buf_t *buf, uint8_t *src_ip, uint8
         // 返回计算得到的 UDP 校验和值
     } else if(protocol == NET_PROTOCOL_TCP) {
         uint16_t len = (uint16_t)buf->len;
+    
+        // 获取 TCP 校验和所需的伪头部位置
         peso_hdr_t* peso_hdr = (peso_hdr_t*)(buf->data - sizeof(peso_hdr_t));
+    
         peso_hdr_t pre; //暂存被覆盖的IP头
+    
+        // 备份原始伪头部内容，防止后续计算修改原数据
         memcpy(&pre, peso_hdr, sizeof(peso_hdr_t));
+    
+        // 填写伪头部的源 IP 和目的 IP 地址
         memcpy(peso_hdr->src_ip, src_ip, NET_IP_LEN);
         memcpy(peso_hdr->dst_ip, dst_ip, NET_IP_LEN);
+    
+        // 伪头部中的保留字段设为 0
         peso_hdr->placeholder = 0;
+    
+        // 指定协议类型为 TCP
         peso_hdr->protocol = NET_PROTOCOL_TCP;
+    
+        // 设置 TCP 段长度（需要大小端转换）
         peso_hdr->total_len16 = swap16(len);
+    
+        // 计算 TCP 校验和，包含 TCP 数据 + 伪头部
         checksum = checksum16((uint16_t*)peso_hdr, len + sizeof(peso_hdr_t));
+    
+        // 将伪头部恢复为原内容
         memcpy(peso_hdr, &pre, sizeof(peso_hdr_t));
     }
     return checksum;

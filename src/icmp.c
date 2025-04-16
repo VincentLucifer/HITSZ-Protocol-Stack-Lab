@@ -76,6 +76,7 @@ void icmp_unreachable(buf_t *recv_buf, uint8_t *src_ip, icmp_code_t code) {
     icmp_hdr->code = code;
     icmp_hdr->id16 = 0;
     icmp_hdr->seq16 = 0;
+
     // Step2 填写数据与校验和：
     // 该部分要包含 IP 数据报首部
     ip_hdr_t *ip_hdr = (ip_hdr_t *)(icmp_hdr + 1);
@@ -88,6 +89,7 @@ void icmp_unreachable(buf_t *recv_buf, uint8_t *src_ip, icmp_code_t code) {
     // 使用与 IP 协议相同的校验和算法计算校验和, 并将其填写到相应位置。
     icmp_hdr->checksum16 = 0;
     icmp_hdr->checksum16 = checksum16((uint16_t *)txbuf.data, sizeof(icmp_hdr_t) + sizeof(ip_hdr_t) + 8);
+    
     // Step3 发送数据报：
     // 调用 ip_out() 函数将封装好且填写了校验和的 ICMP 差错数据报发送出去。
     ip_out(&txbuf, src_ip, NET_PROTOCOL_ICMP);
