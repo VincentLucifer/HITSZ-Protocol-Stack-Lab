@@ -53,6 +53,7 @@ void udp_in(buf_t *buf, uint8_t *src_ip) {
         // 再调用 icmp_unreachable() 函数发送一个端口不可达的 ICMP 差错报文
         // 通知发送方该端口不可用
         buf_add_header(buf, sizeof(ip_hdr_t));
+        icmp_unreachable(buf, src_ip, ICMP_CODE_PORT_UNREACH);
     } else {
         // Step5 调用处理函数：如果在 udp_table 中能找到对应的处理函数
         // 去掉 UDP 报头，调用该处理函数对数据进行相应的处理

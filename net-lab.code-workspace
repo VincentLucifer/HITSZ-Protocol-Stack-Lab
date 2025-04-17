@@ -6,5 +6,9 @@
 	],
 	"settings": {
 		"cmake.generator": "MinGW Makefiles",
+		"files.associations": {
+			"driver.h": "c",
+			"tcp.h": "c"
+		},
 	}
 }
