@@ -51,8 +51,8 @@ The HTTP example maps paths to local files, reads content in chunks and sends it
 Requires a C compiler, CMake and libpcap development libraries. The Windows build links Npcap; its SDK directory is included.
 
 ```bash
-git clone https://github.com/VincentLucifer/HITSZ_Protocal_Stack_Lab.git
-cd HITSZ_Protocal_Stack_Lab
+git clone https://github.com/VincentLucifer/HITSZ-Protocol-Stack-Lab.git
+cd HITSZ-Protocol-Stack-Lab
 cmake -S . -B build
 cmake --build build
 ```

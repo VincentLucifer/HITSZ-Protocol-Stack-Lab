@@ -51,8 +51,8 @@ HTTP 示例将请求路径映射到本地文件，分段读取内容，再通过
 需要 C 编译器、CMake 和 libpcap 开发库；Windows 构建分支链接 Npcap，仓库包含其 SDK 目录。
 
 ```bash
-git clone https://github.com/VincentLucifer/HITSZ_Protocal_Stack_Lab.git
-cd HITSZ_Protocal_Stack_Lab
+git clone https://github.com/VincentLucifer/HITSZ-Protocol-Stack-Lab.git
+cd HITSZ-Protocol-Stack-Lab
 cmake -S . -B build
 cmake --build build
 ```
